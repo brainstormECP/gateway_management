@@ -18,8 +18,17 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Install dependencies
+      working-directory: src/GatewayManagement
       run: dotnet restore
     - name: Build
+      working-directory: src/GatewayManagement
+      run: dotnet build --configuration Release --no-restore
+    - name: Install dependencies Test
+      working-directory: test/GatewayManagementUnitTest
+      run: dotnet restore
+    - name: Build Test
+      working-directory: test/GatewayManagementUnitTest
       run: dotnet build --configuration Release --no-restore
     - name: Test
+      working-directory: test/GatewayManagementUnitTest
       run: dotnet test --no-restore --verbosity normal
