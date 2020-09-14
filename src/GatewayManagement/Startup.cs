@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using GatewayManagement.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
-namespace gateway_management
+namespace GatewayManagement
 {
     public class Startup
     {

@@ -24,11 +24,11 @@ jobs:
       working-directory: src/GatewayManagement
       run: dotnet build --configuration Release --no-restore
     - name: Install dependencies Test
-      working-directory: test/GatewayManagementUnitTest
+      working-directory: test/GatewayManagementTest
       run: dotnet restore
     - name: Build Test
-      working-directory: test/GatewayManagementUnitTest
+      working-directory: test/GatewayManagementTest
       run: dotnet build --configuration Release --no-restore
     - name: Test
-      working-directory: test/GatewayManagementUnitTest
+      working-directory: test/GatewayManagementTest
       run: dotnet test --no-restore --verbosity normal

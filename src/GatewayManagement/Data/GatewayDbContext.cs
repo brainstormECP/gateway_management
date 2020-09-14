@@ -1,17 +1,22 @@
+using GatewayManagement.Models;
 using Microsoft.EntityFrameworkCore;
 
-public class GatewayDbContext : DbContext
+namespace GatewayManagement.Data
 {
-    public GatewayDbContext(DbContextOptions<GatewayDbContext> options)
-            : base(options)
+    public class GatewayDbContext : DbContext
     {
+        public GatewayDbContext(DbContextOptions<GatewayDbContext> options)
+                : base(options)
+        {
 
+        }
+
+        override protected void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Gateway>().HasIndex(g => g.SerialNumber).IsUnique(true);
+            modelBuilder.Entity<Device>().HasIndex(g => g.UID).IsUnique(true);
+        }
+        public virtual DbSet<Gateway> Gateways { get; set; }
+        public virtual DbSet<Device> Devices { get; set; }
     }
-    override protected void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Gateway>().HasIndex(g => g.SerialNumber).IsUnique(true);
-        modelBuilder.Entity<Device>().HasIndex(g => g.UID).IsUnique(true);
-    }
-    public DbSet<Gateway> Gateways { get; set; }
-    public DbSet<Device> Devices { get; set; }
 }
