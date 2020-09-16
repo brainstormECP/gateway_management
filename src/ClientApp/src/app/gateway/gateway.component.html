@@ -1,0 +1,44 @@
+<form [formGroup]="gatewayForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="gateway-card">
+    <mat-card-header>
+      <mat-card-title>Gateway</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Name" formControlName="name">
+            <mat-error *ngIf="gatewayForm.controls['name'].hasError('required')">
+              Name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Serial Number" formControlName="serialNumber">
+            <mat-error *ngIf="gatewayForm.controls['serialNumber'].hasError('required')">
+              Serial Number is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="IPv4" formControlName="ipv4">
+            <mat-error *ngIf="gatewayForm.controls['ipv4'].hasError('required')">
+              IPv4 is <strong>required</strong>
+            </mat-error>
+            <mat-error *ngIf="gatewayForm.controls['ipv4'].hasError('pattern')">
+              The input value <strong>isn't a valid </strong> IPv4 address
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit">Save</button>
+      <button mat-raised-button color="accent" (click)="onCancel()">Cancel</button>
+    </mat-card-actions>
+  </mat-card>
+</form>

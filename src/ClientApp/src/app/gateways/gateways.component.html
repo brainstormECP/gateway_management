@@ -1,0 +1,75 @@
+<mat-card class="gateway-card">
+  <mat-card-header>
+    <mat-card-title>Gateways</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div style="padding-bottom: 10px;">
+      <button mat-raised-button color="primary" type="submit" [routerLink]="'/gateway'">Create</button>
+    </div>
+
+    <ngx-datatable #myTable class="material" [limit]="20" [rows]="gateways" [rowHeight]="60" columnMode="flex"
+      [sortType]="'multi'" [headerHeight]="50" [footerHeight]="50">
+      <!-- Row Detail Template -->
+      <ngx-datatable-row-detail rowHeight="100%" #myDetailRow (toggle)="onDetailToggle($event)">
+        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+          <div style="padding-left:15px;">
+            <div><strong>Devices</strong></div>
+            <table mat-table [dataSource]="row.devices" class="mat-elevation-z1">
+              <ng-container matColumnDef="uid">
+                <th mat-header-cell *matHeaderCellDef> UID. </th>
+                <td mat-cell *matCellDef="let element"> {{element.uid}} </td>
+              </ng-container>
+              <ng-container matColumnDef="vendor">
+                <th mat-header-cell *matHeaderCellDef> Vendor </th>
+                <td mat-cell *matCellDef="let element"> {{element.vendor}} </td>
+              </ng-container>
+              <ng-container matColumnDef="createdDate">
+                <th mat-header-cell *matHeaderCellDef> Created </th>
+                <td mat-cell *matCellDef="let element"> {{element.createdDate | date:"yyyy-MM-dd hh:mm a"}} </td>
+              </ng-container>
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef> Status </th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-icon class="success" *ngIf="element.status==1" aria-hidden="false" aria-label="Status Online">
+                    check_circle</mat-icon>
+                  <mat-icon class="danger" *ngIf="element.status==0" aria-hidden="false" aria-label="Status Offline">
+                    clear</mat-icon>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </ng-template>
+      </ngx-datatable-row-detail>
+      <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false"
+        [canAutoResize]="false">
+        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+          <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+            title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+          </a>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column prop="name" name="Name" [resizeable]="false" [flexGrow]="0.2"></ngx-datatable-column>
+      <ngx-datatable-column prop="serialNumber" name="SerialNumber" [flexGrow]="0.2"></ngx-datatable-column>
+      <ngx-datatable-column prop="iPv4" name="IPv4" [flexGrow]="0.2">
+      </ngx-datatable-column>
+      <ngx-datatable-column [resizeable]="false" [flexGrow]="0.1">
+        <ng-template ngx-datatable-header-template>
+          Actions
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="action-buttons">
+            <button mat-icon-button aria-label="Edit" color="primary" (click)="edit(row)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button aria-label="Delete" color="warn" (click)="delete(row)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </mat-card-content>
+</mat-card>

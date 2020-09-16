@@ -1,6 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Provide sufficient contrast against white background */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* NGX Datatable CSS */
+@import '~@swimlane/ngx-datatable/index.css';
+@import '~@swimlane/ngx-datatable/themes/dark.css';
+@import '~@swimlane/ngx-datatable/themes/material.css';
+@import '~@swimlane/ngx-datatable/assets/icons.css';
+
 a {
   color: #0366d6;
 }
@@ -14,3 +22,6 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

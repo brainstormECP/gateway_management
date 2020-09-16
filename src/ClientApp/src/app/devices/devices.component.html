@@ -1,0 +1,52 @@
+<mat-card class="gateway-card">
+  <mat-card-header>
+    <mat-card-title>Devices</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div style="padding-bottom: 10px;">
+      <button mat-raised-button color="primary" type="submit" [routerLink]="'/device'">Create</button>
+    </div>
+
+    <ngx-datatable #myTable class="material" [limit]="20" [rows]="devices" [rowHeight]="60" columnMode="force"
+      [sortType]="'multi'" [headerHeight]="50" [footerHeight]="50">
+
+      <ngx-datatable-column prop="uid" name="UID" ></ngx-datatable-column>
+      <ngx-datatable-column prop="vendor" name="Vendor" ></ngx-datatable-column>
+      <ngx-datatable-column prop="gateway" name="Gateway" ></ngx-datatable-column>
+      <ngx-datatable-column prop="createdDate" name="Created">
+        <ng-template ngx-datatable-header-template>
+          Created
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{value | date: "yyyy-MM-dd hh:mm a"}}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column prop="status" name="Status">
+        <ng-template ngx-datatable-header-template>
+          Status
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <mat-icon class="success" *ngIf="value==1" aria-hidden="false" aria-label="Status Online">
+            check_circle</mat-icon>
+          <mat-icon class="danger" *ngIf="value==0" aria-hidden="false" aria-label="Status Offline">
+            clear</mat-icon>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column>
+        <ng-template ngx-datatable-header-template>
+          Actions
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="action-buttons">
+            <button mat-icon-button aria-label="Edit" color="primary" (click)="edit(row)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button aria-label="Delete" color="warn" (click)="delete(row)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </mat-card-content>
+</mat-card>
