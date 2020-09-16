@@ -76,12 +76,12 @@ namespace GatewayManagementTest
         public async void TestCreate()
         {
             // Arrange
-            var gateway = new Gateway { Id = 1, Name = "Asdsd", IPv4 = "192.168.4.12", SerialNumber = "sdsd" };
+            var gateway = new Gateway { Name = "Asdsd", IPv4 = "192.168.4.12", SerialNumber = "sdsd" };
 
             var options = new DbContextOptionsBuilder<GatewayDbContext>().UseInMemoryDatabase("gateway_test_db");
             var db = new GatewayDbContext(options.Options);
             db.RemoveRange(db.Gateways);
-            await db.SaveChangesAsync();
+            db.SaveChanges();
             var repo = new GatewayRepository(db);
 
             // Act
