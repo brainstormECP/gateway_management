@@ -52,7 +52,7 @@ namespace GatewayManagement.Controllers
 
         // PUT: api/TodoItems/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(Guid id, Device device)
+        public async Task<IActionResult> PutTodoItem(int id, Device device)
         {
             if (id != device.Id)
             {
@@ -92,7 +92,7 @@ namespace GatewayManagement.Controllers
             return device;
         }
 
-        private bool DeviceExists(Guid id)
+        private bool DeviceExists(int id)
         {
             return _db.Set<Device>().Any(g => g.Id == id);
         }

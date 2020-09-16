@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using GatewayManagement.Data;
+using GatewayManagement.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +31,7 @@ namespace GatewayManagement
             services.AddControllersWithViews();
             services.AddDbContext<GatewayDbContext>(opt => opt.UseInMemoryDatabase("gateway_db"));
             services.AddTransient<DbContext,GatewayDbContext>();
+            services.AddTransient<GatewayRepository>();
             services.AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new OpenApiInfo
@@ -50,6 +52,7 @@ namespace GatewayManagement
                     c.IncludeXmlComments(xmlPath);
                 });
             // In production, the Angular files will be served from this directory
+            services.AddCors();
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "../ClientApp/dist";
@@ -78,7 +81,7 @@ namespace GatewayManagement
             }
 
             app.UseRouting();
-
+            app.UseCors(build => build.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

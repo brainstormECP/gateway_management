@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GatewayManagement.Models;
+using GatewayManagement.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -15,28 +16,28 @@ namespace GatewayManagement.Controllers
     {
         private readonly ILogger<GatewayController> _logger;
 
-        private DbContext _db { get; set; }
+        private GatewayRepository _repo { get; set; }
 
-        public GatewayController(DbContext db, ILogger<GatewayController> logger)
+        public GatewayController(GatewayRepository repo, ILogger<GatewayController> logger)
         {
-            _db = db;
+            _repo = repo;
             _logger = logger;
         }
 
         [HttpGet]
         public async Task<IEnumerable<Gateway>> Get()
         {
-            return await _db.Set<Gateway>().ToListAsync();
+            return await _repo.FindAll();
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> Get(int? id)
         {
             if (id == null)
             {
                 return BadRequest();
             }
-            var gateway = await _db.Set<Gateway>().FindAsync(id);
+            var gateway = await _repo.FindById(id.Value);
             if (gateway == null)
             {
                 return NotFound();
@@ -44,14 +45,14 @@ namespace GatewayManagement.Controllers
             return Ok(gateway);
         }
 
-        [HttpGet("{serialNumber}")]
+        [HttpGet("CheckSerial/{serialNumber}")]
         public async Task<IActionResult> CheckSerialNumber(string serialNumber)
         {
             if (serialNumber == null)
             {
                 return BadRequest();
             }
-            return Ok(await SerialNumberExists(serialNumber));
+            return Ok(await _repo.SerialNumberExists(0, serialNumber));
         }
         [HttpPost]
         public async Task<ActionResult<Gateway>> Post(Gateway gateway)
@@ -62,13 +63,15 @@ namespace GatewayManagement.Controllers
                 {
                     return BadRequest();
                 }
-                if (await SerialNumberExists(gateway.SerialNumber))
+                var result = await _repo.Create(gateway);
+                if (result.Status)
                 {
-                    return BadRequest("Already exists a Gateway with this serial number.");
+                    return CreatedAtAction(nameof(Get), new { id = gateway.Id }, gateway);
                 }
-                _db.Set<Gateway>().Add(gateway);
-                await _db.SaveChangesAsync();
-                return CreatedAtAction(nameof(Get), new { id = gateway.Id }, gateway);
+                else
+                {
+                    return BadRequest(result.Detail);
+                }
             }
             catch (DbUpdateException ex)
             {
@@ -82,53 +85,29 @@ namespace GatewayManagement.Controllers
 
         // PUT: api/TodoItems/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, Gateway gateway)
+        public async Task<IActionResult> Put(int id, Gateway gateway)
         {
             if (id != gateway.Id)
             {
                 return BadRequest();
             }
-
-            _db.Entry(gateway).State = EntityState.Modified;
-            try
+            var result = await _repo.Update(gateway);
+            if (result.Status)
             {
-                await _db.SaveChangesAsync();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GatewayExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest(result.Detail);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Gateway>> Delete(Guid id)
+        public async Task<ActionResult<Gateway>> Delete(int id)
         {
-            var gateway = await _db.Set<Gateway>().FindAsync(id);
-            if (gateway == null)
+            var result = await _repo.Delete(id);
+            if (result.Status)
             {
-                return NotFound();
+                return Ok();
             }
-            _db.Set<Gateway>().Remove(gateway);
-            await _db.SaveChangesAsync();
-            return gateway;
-        }
-        private async Task<bool> SerialNumberExists(string serialNumber)
-        {
-            return await _db.Set<Gateway>().AnyAsync(g => g.SerialNumber == serialNumber);
-        }
-
-        private bool GatewayExists(Guid id)
-        {
-            return _db.Set<Gateway>().Any(g => g.Id == id);
+            return BadRequest(result.Detail);
         }
     }
 }
