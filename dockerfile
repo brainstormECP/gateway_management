@@ -2,7 +2,6 @@ FROM node:12.18-alpine AS client-app
 ARG skip_client_build=false
 WORKDIR /app
 COPY src/ClientApp .
-RUN npm config set registry https://npm.cloud.desoft.cu/
 RUN [[ ${skip_client_build} = true ]] && echo "Skipping npm install" || npm install 
 RUN [[ ${skip_client_build} = true ]] && mkdir dist || npm run-script build
 
