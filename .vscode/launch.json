@@ -5,7 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (console)",
+            "name": "Gateway Management",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/GatewayManagement/bin/Debug/netcoreapp3.1/GatewayManagement.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/GatewayManagement",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Gateway Test",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",

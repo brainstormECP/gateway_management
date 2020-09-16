@@ -23,9 +23,18 @@ namespace GatewayManagement.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Device>> Get()
+        public async Task<IEnumerable<DeviceVM>> Get()
         {
-            return await _db.Set<Device>().ToListAsync();
+            return await _db.Set<Device>().Include(d => d.Gateway).Select(d => new DeviceVM
+            {
+                Id = d.Id,
+                UID = d.UID,
+                Vendor = d.Vendor,
+                Status = d.Status,
+                CreatedDate = d.CreatedDate,
+                GatewayId = d.GatewayId,
+                Gateway = d.Gateway.Name
+            }).ToListAsync();
         }
 
         [HttpGet("{id}")]
@@ -80,7 +89,7 @@ namespace GatewayManagement.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Device>> Delete(Guid id)
+        public async Task<ActionResult<Device>> Delete(int id)
         {
             var device = await _db.Set<Device>().FindAsync(id);
             if (device == null)
