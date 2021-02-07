@@ -89,6 +89,7 @@ namespace GatewayManagementTest
 
             // Assert
             Assert.True(result.Status);
+            Assert.Equal((result.Entity as Gateway).IPv4,"192.168.4.12");
         }
 
         [Fact]
